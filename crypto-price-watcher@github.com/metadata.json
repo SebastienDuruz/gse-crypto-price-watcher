@@ -1,0 +1,10 @@
+{
+    "name" : "CryptoPriceWatcher",
+    "description" : "A simple extension that show the current price for Bitcoin and Ethereum (USD).",
+    "shell-version" : [
+        "40.2"
+    ],
+    "url" : "https://github.com/Smour/gse-crypto-price-watcher.git",
+    "uuid" : "crypto-price-watcher@github.com",
+    "version" : 1
+}
