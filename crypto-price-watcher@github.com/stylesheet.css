@@ -1,4 +1,9 @@
+/* 
+    Autor : Sébastien Duruz
+    Date : 19.06.2021
+    Description : Stylesheet for Crypto-price-watcher GSE.
+*/
+
 .priceLabel{
-    font-size: medium;
     color : yellow;
 }

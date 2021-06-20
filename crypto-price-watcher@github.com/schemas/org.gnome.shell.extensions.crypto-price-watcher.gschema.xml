@@ -1,0 +1,25 @@
+<!--
+    Autor : Sébastien Duruz
+    Date : 20.06.2021
+    Description : The graph that store the preferences of the user
+-->
+<?xml version="1.0" encoding="UTF-8"?>
+<schemalist>
+    <enum id="org.gnome.shell.extensions.crypto-price-watcher.enum-position">
+        <value value="0" nick="Left"/>
+        <value value="1" nick="Center"/>
+        <value value="2" nick="Right"/>
+    </enum>
+    <schema id="org.gnome.shell.extensions.crypto-price-watcher"
+        path="/org/gnome/shell/extensions/crypto-price-watcher/">
+        <key name="panel-position"
+            enum="org.gnome.shell.extensions.crypto-price-watcher.enum-position">
+            <default>'Right'</default>
+            <summary>"The output location of the prices"</summary>
+        </key>
+        <key type="i" name="timeout">
+            <default>60</default>
+            <summary>Number of seconds before check price again</summary>
+        </key>
+    </schema>
+</schemalist>
