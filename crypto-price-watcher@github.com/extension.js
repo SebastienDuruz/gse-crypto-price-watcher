@@ -4,15 +4,38 @@
 
 const Main = imports.ui.main;
 const St = imports.gi.St;
+const GObject = imports.gi.GObject;
 const Gio = imports.gi.Gio;
+const Clutter = imports.gi.Clutter;
 const PanelMenu = imports.ui.panelMenu;
 const PopupMenu = imports.ui.popupMenu;
+const CheckBox = imports.ui.checkBox;
+const Me = imports.misc.extensionUtils.getCurrentExtension();
 const Mainloop = imports.mainloop;
 const Glib = imports.gi.GLib;
-const Me = imports.misc.extensionUtils.getCurrentExtension();
 const ByteArray = imports.byteArray;
 
-let panelButton, priceLabel, timeout, priceTimer, myPopup;
+let cryptoPricePanel, priceLabel, timeout, priceTimer;
+
+/*
+* The main class of the extension
+*/
+const CryptoPricePanel = GObject.registerClass(
+    class CryptoPricePanel extends PanelMenu.Button {
+
+        _init () {
+        
+            super._init(0);
+            
+            priceLabel = new St.Label({
+                style_class : "priceLabel",
+                y_align : Clutter.ActorAlign.CENTER,
+            });
+
+            this.add_child(priceLabel);
+        }
+    }
+);
 
 /*
 * Get the settings from schema
@@ -80,10 +103,7 @@ function getPricesDatas () {
     return true;
 }
 
-/*
-* Intiation of the extension
-*/
-function init () {
+function init() {
 
     log(`initializing ${Me.metadata.name}`);
     
@@ -92,30 +112,15 @@ function init () {
 
     // Get the price timer from settings object
     priceTimer = settings.get_int('timeout').toString();
-
-    // Create the necessary objects
-    panelButton = new St.Bin({
-        style_class : "panel-button",
-        reactive : true,
-        track_hover : true
-    });
-    priceLabel = new St.Label({
-        style_class : "priceLabel",
-    });
-
-    // Add the label to parent
-    panelButton.set_child(priceLabel);
 }
 
-/*
-* Occured each time the extension is enabled
-*/
-function enable () {
+function enable() {
 
     log(`enabling ${Me.metadata.name}`);
 
-    // Insert the objects to rightBox box
-    Main.panel._rightBox.insert_child_at_index(panelButton, 0);
+    // Create the panel and add it to status area
+    cryptoPricePanel = new CryptoPricePanel();
+    Main.panel.addToStatusArea('cryptoPricePanel', cryptoPricePanel, 0);
 
     // Exec the function at start
     getPricesDatas();
@@ -124,16 +129,14 @@ function enable () {
     timeout = Mainloop.timeout_add_seconds(priceTimer, getPricesDatas);
 }
 
-/*
-* Occured each time the extension is disabled
-*/
-function disable () {
+function disable() {
 
     log(`disabling ${Me.metadata.name}`);
 
     // Remove the function from loop
     Mainloop.source_remove(timeout);
 
-    // Remove the objects from center box
-    Main.panel._rightBox.remove_child(panelButton);
+    // destroy the panel
+    cryptoPricePanel.destroy();
 }
+
